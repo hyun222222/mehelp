@@ -112,12 +112,12 @@ export default function ContactPage() {
                                     <Send className="w-4 h-4 mr-2" />
                                     문의 접수
                                 </Button>
-                                <Button type="button" variant="outline" asChild>
-                                    <a href="tel:010-5534-6843">
+                                <a href="tel:010-5534-6843" className="flex-1">
+                                    <Button type="button" variant="outline" className="w-full">
                                         <Phone className="w-4 h-4 mr-2" />
                                         전화 상담
-                                    </a>
-                                </Button>
+                                    </Button>
+                                </a>
                             </div>
                         </form>
                     </CardContent>
@@ -135,9 +135,9 @@ export default function ContactPage() {
                             <p className="text-sm text-slate-600 mb-3">
                                 바로 상담을 원하시면 전화주세요
                             </p>
-                            <Button variant="outline" className="w-full" asChild>
-                                <a href="tel:010-5534-6843">010-5534-6843</a>
-                            </Button>
+                            <a href="tel:010-5534-6843">
+                                <Button variant="outline" className="w-full">010-5534-6843</Button>
+                            </a>
                         </CardContent>
                     </Card>
 
