@@ -1,0 +1,14 @@
+export const LEGAL_LIMITS = {
+    UNSECURED_DEBT_LIMIT: 500000000, // 5억 원
+    SECURED_DEBT_LIMIT: 1000000000, // 10억 원
+    TOTAL_DEBT_LIMIT: 1500000000, // 15억 원
+};
+
+export const MINIMUM_COST_OF_LIVING_2025 = {
+    1: 1339067, // 1인 가구 (예시, 2025년 예상치)
+    2: 2209565,
+    3: 2822356,
+    4: 3423688,
+    5: 4012345,
+    6: 4589012,
+};
