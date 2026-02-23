@@ -20,8 +20,77 @@ export default async function HomePage() {
     .from('legal_cases')
     .select('*', { count: 'exact', head: true });
 
+  // JSON-LD structured data for AI & Google
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'K&H 법률서식',
+    alternateName: '김앤현 법률서식',
+    url: 'https://forms.kimnhyunlaw.com',
+    description: '대한민국 법률서식·사례 무료 검색 및 다운로드 서비스. 소장, 답변서, 고소장 등 3,000건 이상의 법률서식 제공.',
+    inLanguage: 'ko',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://forms.kimnhyunlaw.com/search?q={search_term_string}',
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
+  const organizationJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LegalService',
+    name: '김앤현 법률사무소',
+    alternateName: 'K&H Law Office',
+    url: 'https://forms.kimnhyunlaw.com',
+    logo: 'https://forms.kimnhyunlaw.com/logo.png',
+    description: '부동산, 건설분쟁, 상속·증여, 행정소송, 지식재산권 등 다양한 법률분야 전문 법률사무소',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: '법원로 16 정곡빌딩 동관 502호',
+      addressLocality: '서초구',
+      addressRegion: '서울',
+      postalCode: '06594',
+      addressCountry: 'KR',
+    },
+    telephone: '+82-2-3477-7600',
+    email: 'info@kimnhyun.com',
+    areaServed: { '@type': 'Country', name: '대한민국' },
+    serviceType: ['법률서식 제공', '법률상담', '부동산 소송', '민사소송', '행정소송'],
+    knowsAbout: ['한국법', '민사소송', '형사소송', '가사소송', '행정소송', '부동산법', '개인회생', '파산', '상속', '이혼'],
+  };
+
+  const collectionJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: '법률서식·사례 검색',
+    description: `${formsCount || 0}건의 법률서식과 ${casesCount || 0}건의 법률사례를 무료로 검색하고 다운로드할 수 있습니다.`,
+    url: 'https://forms.kimnhyunlaw.com',
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: formsCount || 0,
+      itemListElement: (popularForms || []).slice(0, 5).map((form: any, i: number) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `https://forms.kimnhyunlaw.com/forms/${form.id}`,
+        name: form.title,
+      })),
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
       <HeroSearch />
       <PopularTags />
       <CategoryChips />

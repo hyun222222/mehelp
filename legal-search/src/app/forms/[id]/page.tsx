@@ -15,13 +15,20 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
     if (!form) return { title: '서식을 찾을 수 없습니다' };
 
+    const desc = form.description || `${form.title} - ${form.category} 법률서식을 무료로 다운로드하세요.`;
     return {
         title: `${form.title} | 법률서식 무료 다운로드`,
-        description: form.description || `${form.title} - ${form.category} 법률서식을 무료로 다운로드하세요.`,
+        description: desc,
+        keywords: [form.title, form.category, '법률서식', '무료 다운로드', '소장', '답변서'].filter(Boolean),
         openGraph: {
-            title: form.title,
-            description: form.description || `${form.title} 법률서식`,
+            title: `${form.title} | K&H 법률서식`,
+            description: desc,
             type: 'article',
+            url: `https://forms.kimnhyunlaw.com/forms/${params.id}`,
+            siteName: 'K&H 법률서식',
+        },
+        alternates: {
+            canonical: `https://forms.kimnhyunlaw.com/forms/${params.id}`,
         },
     };
 }
@@ -57,21 +64,48 @@ export default async function FormDetailPage({ params }: { params: { id: string 
         .neq('id', form.id)
         .limit(5);
 
-    // JSON-LD
+    // JSON-LD: DigitalDocument + BreadcrumbList
     const jsonLd = {
         '@context': 'https://schema.org',
-        '@type': 'LegalDocument' as any,
+        '@type': 'DigitalDocument',
         name: form.title,
+        headline: form.title,
         description: form.description || form.title,
         provider: { '@type': 'Organization', name: form.source },
+        publisher: {
+            '@type': 'LegalService',
+            name: '김앤현 법률사무소',
+            url: 'https://forms.kimnhyunlaw.com',
+        },
         datePublished: form.created_at,
         dateModified: form.updated_at,
-        url: form.source_url,
+        url: `https://forms.kimnhyunlaw.com/forms/${form.id}`,
+        inLanguage: 'ko',
+        encodingFormat: 'application/x-hwp',
+        isAccessibleForFree: true,
+        genre: form.category,
+        keywords: [form.category, form.subcategory, '법률서식', '무료 다운로드'].filter(Boolean).join(', '),
+        about: {
+            '@type': 'Thing',
+            name: form.category || '법률서식',
+        },
+    };
+
+    const breadcrumbJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            { '@type': 'ListItem', position: 1, name: '홈', item: 'https://forms.kimnhyunlaw.com' },
+            { '@type': 'ListItem', position: 2, name: '서식', item: 'https://forms.kimnhyunlaw.com/forms' },
+            ...(categoryParts[0] ? [{ '@type': 'ListItem', position: 3, name: categoryParts[0] }] : []),
+            { '@type': 'ListItem', position: categoryParts[0] ? 4 : 3, name: form.title },
+        ],
     };
 
     return (
         <>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
             <div className="max-w-6xl mx-auto px-4 py-6">
                 {/* Back button */}
                 <a href="/forms" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[var(--color-primary)] mb-4 no-underline transition-colors">
