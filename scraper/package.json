@@ -1,0 +1,26 @@
+{
+    "name": "legal-scraper",
+    "version": "1.0.0",
+    "description": "Legal forms and cases scraper for helplaw24.go.kr and pro-se.scourt.go.kr",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "ts-node src/index.ts",
+        "crawl:forms": "ts-node src/index.ts --target forms",
+        "crawl:cases": "ts-node src/index.ts --target cases",
+        "crawl:prose": "ts-node src/index.ts --target prose",
+        "test:crawl": "ts-node src/test-crawl.ts",
+        "enrich:forms": "ts-node src/enrich-forms.ts"
+    },
+    "dependencies": {
+        "@supabase/supabase-js": "^2.39.0",
+        "axios": "^1.6.0",
+        "cheerio": "^1.0.0-rc.12",
+        "dotenv": "^16.3.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "ts-node": "^10.9.0",
+        "typescript": "^5.3.0"
+    }
+}
