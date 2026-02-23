@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID || '';
 
 export const metadata: Metadata = {
   title: {
@@ -9,16 +12,30 @@ export const metadata: Metadata = {
   description: "소장, 답변서, 고소장 등 법률서식과 법률상담·구조 사례를 무료로 검색하고 다운로드하세요. 대한법률구조공단, 법원 소송안내마당 제공.",
   keywords: ["법률서식", "소장", "고소장", "답변서", "법률상담", "무료 다운로드", "법률구조", "법률서식 검색", "법원 서식"],
   openGraph: {
-    title: "법률서식·사례 검색",
-    description: "3,000건+ 법률서식 무료 검색·다운로드",
+    title: "법률서식·사례 검색 | K&H 법률서식",
+    description: "3,000건+ 법률서식 무료 검색·다운로드. 소장, 답변서, 고소장 등.",
     type: "website",
     locale: "ko_KR",
+    url: "https://forms.kimnhyunlaw.com",
+    siteName: "K&H 법률서식",
+  },
+  alternates: {
+    canonical: "https://forms.kimnhyunlaw.com",
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
-  verification: {},
+  verification: {
+    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || '',
+  },
 };
 
 export default function RootLayout({
@@ -29,6 +46,23 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="min-h-screen flex flex-col">
+        {/* Google Analytics */}
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

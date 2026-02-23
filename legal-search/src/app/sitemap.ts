@@ -6,7 +6,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
-    const baseUrl = 'https://legal-search.vercel.app'; // Update after deploy
+    const baseUrl = 'https://forms.kimnhyunlaw.com';
 
     // Static pages
     const routes: MetadataRoute.Sitemap = [
@@ -14,6 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { url: `${baseUrl}/forms`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
         { url: `${baseUrl}/cases`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
         { url: `${baseUrl}/search`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+        { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     ];
 
     // Dynamic form pages
