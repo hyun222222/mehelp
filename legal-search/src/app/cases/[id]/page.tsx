@@ -14,13 +14,19 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
     if (!caseData) return { title: '사례를 찾을 수 없습니다' };
 
+    const desc = caseData.question?.slice(0, 160) || `${caseData.title} - ${caseData.category} ${caseData.case_type}`;
     return {
         title: `${caseData.title} | ${caseData.case_type}`,
-        description: caseData.question?.slice(0, 160) || `${caseData.title} - ${caseData.category} ${caseData.case_type}`,
+        description: desc,
         openGraph: {
-            title: caseData.title,
-            description: caseData.question?.slice(0, 160) || caseData.title,
+            title: `${caseData.title} | K&H 법률서식`,
+            description: desc,
             type: 'article',
+            url: `https://forms.kimnhyunlaw.com/cases/${params.id}`,
+            siteName: 'K&H 법률서식',
+        },
+        alternates: {
+            canonical: `https://forms.kimnhyunlaw.com/cases/${params.id}`,
         },
     };
 }
@@ -57,14 +63,34 @@ export default async function CaseDetailPage({ params }: { params: { id: string 
         headline: caseData.title,
         description: caseData.question || caseData.facts || caseData.title,
         author: { '@type': 'Organization', name: caseData.source },
+        publisher: {
+            '@type': 'LegalService',
+            name: '김앤현 법률사무소',
+            url: 'https://forms.kimnhyunlaw.com',
+        },
         datePublished: caseData.created_at,
+        url: `https://forms.kimnhyunlaw.com/cases/${caseData.id}`,
+        inLanguage: 'ko',
+        isAccessibleForFree: true,
     };
 
+    const breadcrumbJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            { '@type': 'ListItem', position: 1, name: '홈', item: 'https://forms.kimnhyunlaw.com' },
+            { '@type': 'ListItem', position: 2, name: '사례', item: 'https://forms.kimnhyunlaw.com/cases' },
+            { '@type': 'ListItem', position: 3, name: caseData.case_type, item: `https://forms.kimnhyunlaw.com/search?category=${encodeURIComponent(caseData.case_type)}` },
+            ...(categoryParts[0] ? [{ '@type': 'ListItem', position: 4, name: categoryParts[0], item: `https://forms.kimnhyunlaw.com/search?category=${encodeURIComponent(categoryParts[0])}` }] : []),
+            { '@type': 'ListItem', position: categoryParts[0] ? 5 : 4, name: caseData.title, item: `https://forms.kimnhyunlaw.com/cases/${caseData.id}` },
+        ],
+    };
     const isConsultation = caseData.case_type === '상담사례';
 
     return (
         <>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
             <div className="max-w-6xl mx-auto px-4 py-6">
                 <a href="/cases" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[var(--color-primary)] mb-4 no-underline transition-colors">
                     <ArrowLeft className="w-4 h-4" /> 사례 목록
@@ -184,7 +210,7 @@ export default async function CaseDetailPage({ params }: { params: { id: string 
                         </div>
                     </aside>
                 </div>
-            </div>
+            </div >
         </>
     );
 }

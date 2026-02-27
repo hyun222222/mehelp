@@ -97,8 +97,8 @@ export default async function FormDetailPage({ params }: { params: { id: string 
         itemListElement: [
             { '@type': 'ListItem', position: 1, name: '홈', item: 'https://forms.kimnhyunlaw.com' },
             { '@type': 'ListItem', position: 2, name: '서식', item: 'https://forms.kimnhyunlaw.com/forms' },
-            ...(categoryParts[0] ? [{ '@type': 'ListItem', position: 3, name: categoryParts[0] }] : []),
-            { '@type': 'ListItem', position: categoryParts[0] ? 4 : 3, name: form.title },
+            ...(categoryParts[0] ? [{ '@type': 'ListItem', position: 3, name: categoryParts[0], item: `https://forms.kimnhyunlaw.com/search?category=${encodeURIComponent(categoryParts[0])}` }] : []),
+            { '@type': 'ListItem', position: categoryParts[0] ? 4 : 3, name: form.title, item: `https://forms.kimnhyunlaw.com/forms/${form.id}` },
         ],
     };
 
