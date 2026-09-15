@@ -4,8 +4,9 @@ import migratedFormIds from './lib/migrated-form-ids.json';
 const ids = new Set(migratedFormIds);
 
 export function middleware(request: NextRequest) {
-  // Enable only after every mapped destination is publicly reachable.
-  if (process.env.MEHELP_REDIRECT_ENABLED !== 'true' || request.nextUrl.hostname !== 'forms.kimnhyunlaw.com') {
+  // All 1,000 mapped destinations passed live HTTPS checks on 2026-09-15.
+  // Set false to temporarily disable the migration without changing mappings.
+  if (process.env.MEHELP_REDIRECT_ENABLED === 'false' || request.nextUrl.hostname !== 'forms.kimnhyunlaw.com') {
     return NextResponse.next();
   }
   const path = request.nextUrl.pathname;
